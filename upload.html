@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Video</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Upload Video</h1>
+        <a href="index.html">Back to Feed</a>
+    </header>
+
+    <form id="upload-form">
+        <input type="file" id="videoInput" accept="video/*">
+        <button type="submit">Upload</button>
+    </form>
+
+    <script>
+        document.getElementById("upload-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const file = document.getElementById("videoInput").files[0];
+            if (file) {
+                const videoURL = URL.createObjectURL(file);
+                const videos = JSON.parse(localStorage.getItem("videos")) || [];
+                videos.push(videoURL);
+                localStorage.setItem("videos", JSON.stringify(videos));
+                alert("Video uploaded!");
+            }
+        });
+    </script>
+
+</body>
+</html>
