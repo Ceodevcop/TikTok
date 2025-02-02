@@ -1,0 +1,24 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    text-align: center;
+    background: #111;
+    color: white;
+}
+
+header {
+    background: #222;
+    padding: 15px;
+}
+
+a {
+    color: #4db8ff;
+    text-decoration: none;
+}
+
+#video-feed video {
+    width: 100%;
+    max-height: 80vh;
+    display: block;
+    margin: 20px auto;
+}
