@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monnify Wallet Integration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        input, button {
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .message {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <h1>Monnify Wallet Integration</h1>
+
+    <!-- Wallet Creation Form -->
+    <div>
+        <h2>Create Wallet</h2>
+        <form id="createWalletForm" onsubmit="event.preventDefault(); createWallet()">
+            <div class="form-group">
+                <input type="text" id="firstName" placeholder="First Name" required>
+            </div>
+            <div class="form-group">
+                <input type="text" id="lastName" placeholder="Last Name" required>
+            </div>
+            <div class="form-group">
+                <input type="email" id="email" placeholder="Email" required>
+            </div>
+            <div class="form-group">
+                <input type="text" id="bvn" placeholder="BVN" required>
+            </div>
+            <div class="form-group">
+                <input type="date" id="dateOfBirth" placeholder="Date of Birth" required>
+            </div>
+            <div class="form-group">
+                <input type="text" id="preferredBank" placeholder="Preferred Bank Code (e.g., 058 for GTBank)" required>
+            </div>
+            <button type="submit">Create Wallet</button>
+        </form>
+    </div>
+
+    <!-- Debit Wallet Form -->
+    <div>
+        <h2>Debit Wallet</h2>
+        <form id="debitWalletForm" onsubmit="event.preventDefault(); debitWallet()">
+            <div class="form-group">
+                <input type="text" id="walletAccountNumber" placeholder="Wallet Account Number" required>
+            </div>
+            <div class="form-group">
+                <input type="number" id="amount" placeholder="Amount (in kobo)" required>
+            </div>
+            <div class="form-group">
+                <input type="text" id="recipientAccountNumber" placeholder="Recipient Account Number" required>
+            </div>
+            <div class="form-group">
+                <input type="text" id="recipientBankCode" placeholder="Recipient Bank Code" required>
+            </div>
+            <button type="submit">Debit Wallet</button>
+        </form>
+    </div>
+
+    <!-- Message Display -->
+    <div id="message" class="message"></div>
+
+    <script>
+        // Configuration
+        const API_KEY = "MK_PROD_FLX4P92EDF"; // Replace with your API Key
+        const SECRET_KEY = "YOUR_SECRET_KEY"; // Replace with your Secret Key
+        const BASE_URL = "https://api.monnify.com"; // Use sandbox URL for testing
+
+        // Function to generate Basic Auth token
+        function generateAuthToken() {
+            const token = btoa(`${API_KEY}:${SECRET_KEY}`);
+            return `Basic ${token}`;
+        }
+
+        // Function to create a wallet
+        async function createWallet() {
+            const authToken = generateAuthToken();
+            const endpoint = `${BASE_URL}/api/v1/disbursements/wallet`;
+
+            const walletData = {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                email: document.getElementById('email').value,
+                bvn: document.getElementById('bvn').value,
+                dateOfBirth: document.getElementById('dateOfBirth').value,
+                currency: "NGN",
+                preferredBank: document.getElementById('preferredBank').value
+            };
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: "POST",
+                    headers: {
+                        "Authorization": authToken,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(walletData)
+                });
+
+                const data = await response.json();
+                if (data.requestSuccessful) {
+                    showMessage(`Wallet created successfully! Account Number: ${data.responseBody.accountNumber}`, "success");
+                    console.log("Wallet Created:", data.responseBody);
+                } else {
+                    throw new Error(data.responseMessage);
+                }
+            } catch (error) {
+                showMessage(`Error creating wallet: ${error.message}`, "error");
+                console.error("Error creating wallet:", error);
+            }
+        }
+
+        // Function to debit the wallet
+        async function debitWallet() {
+            const authToken = generateAuthToken();
+            const endpoint = `${BASE_URL}/api/v1/disbursements/single`;
+
+            const debitData = {
+                amount: parseFloat(document.getElementById('amount').value),
+                reference: `ref_${Date.now()}`,
+                narration: "Wallet Debit",
+                destinationBankCode: document.getElementById('recipientBankCode').value,
+                destinationAccountNumber: document.getElementById('recipientAccountNumber').value,
+                currency: "NGN",
+                sourceAccountNumber: document.getElementById('walletAccountNumber').value
+            };
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: "POST",
+                    headers: {
+                        "Authorization": authToken,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(debitData)
+                });
+
+                const data = await response.json();
+                if (data.requestSuccessful) {
+                    showMessage(`Debit successful! Transaction Reference: ${data.responseBody.transactionReference}`, "success");
+                    console.log("Debit Successful:", data.responseBody);
+                } else {
+                    throw new Error(data.responseMessage);
+                }
+            } catch (error) {
+                showMessage(`Error debiting wallet: ${error.message}`, "error");
+                console.error("Error debiting wallet:", error);
+            }
+        }
+
+        // Function to display messages
+        function showMessage(text, type = "info") {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type === 'error' ? 'error' : 'success'}`;
+
+            // Clear message after 5 seconds
+            setTimeout(() => {
+                messageDiv.textContent = '';
+                messageDiv.className = 'message';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
