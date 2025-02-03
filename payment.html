@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monnify Mandate Integration</title>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="mandate.js" defer></script> <!-- Link to the external JavaScript file -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -53,69 +54,5 @@
         <button type="submit">Create Mandate</button>
     </form>
     <div id="message" class="message"></div>
-
-    <script>
-        const apiKey = 'MK_TEST_U7KS6AM684'; // Replace with your API Key
-        const secretKey = 'FCAHPT9PR3SZFVC51NE63M33517PDXES'; // Replace with your Secret Key
-        const baseUrl = 'https://sandbox.monnify.com'; // Replace with live URL if needed
-        const contractCode = 'YOUR_CONTRACT_CODE'; // Replace with your contract code
-
-        // Function to generate Basic Auth token
-        function generateAuthToken() {
-            const token = btoa(`${apiKey}:${secretKey}`);
-            return `Basic ${token}`;
-        }
-
-        // Function to create a mandate
-        async function createMandate(event) {
-            event.preventDefault();
-
-            const accountName = document.getElementById('accountName').value;
-            const customerEmail = document.getElementById('customerEmail').value;
-            const bvn = document.getElementById('bvn').value;
-            const bankCode = document.getElementById('bankCode').value;
-            const accountNumber = document.getElementById('accountNumber').value;
-
-            const authToken = generateAuthToken();
-            const endpoint = `${baseUrl}/api/v1/merchant/subaccounts`;
-
-            const mandateData = {
-                accountReference: "ref_" + Math.random().toString(36).substring(7),
-                accountName: accountName,
-                currencyCode: "NGN",
-                contractCode: contractCode,
-                customerEmail: customerEmail,
-                customerName: accountName,
-                bvn: bvn,
-                bankCode: bankCode,
-                accountNumber: accountNumber,
-            };
-
-            try {
-                const response = await axios.post(endpoint, mandateData, {
-                    headers: {
-                        'Authorization': authToken,
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                showMessage('Mandate created successfully!', 'success');
-                console.log('Mandate Created:', response.data);
-            } catch (error) {
-                showMessage(`Error creating mandate: ${error.response ? error.response.data.responseMessage : error.message}`, 'error');
-                console.error('Error creating mandate:', error.response ? error.response.data : error.message);
-            }
-        }
-
-        // Function to display messages
-        function showMessage(message, type = 'info') {
-            const messageDiv = document.getElementById('message');
-            messageDiv.textContent = message;
-            messageDiv.style.color = type === 'error' ? 'red' : 'green';
-        }
-
-        // Attach form submission handler
-        document.getElementById('mandateForm').addEventListener('submit', createMandate);
-    </script>
 </body>
 </html>
