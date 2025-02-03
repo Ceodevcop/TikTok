@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monnify Payment Integration</title>
+    <title>Monnify Mandate Integration</title>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
         body {
@@ -43,23 +43,22 @@
     </style>
 </head>
 <body>
-    <h1>DExAwallet Payment Integration</h1>
-    <form id="paymentForm">
-        <input type="number" id="amount" placeholder="Amount (in kobo)" required>
-        <input type="text" id="customerName" placeholder="Customer Name" required>
+    <h1>Monnify Mandate Integration</h1>
+    <form id="mandateForm">
+        <input type="text" id="accountName" placeholder="Account Name" required>
         <input type="email" id="customerEmail" placeholder="Customer Email" required>
-        <input type="text" id="paymentDescription" placeholder="Payment Description" required>
-        <button type="submit">Pay Now</button>
+        <input type="text" id="bvn" placeholder="BVN" required>
+        <input type="text" id="bankCode" placeholder="Bank Code" required>
+        <input type="text" id="accountNumber" placeholder="Account Number" required>
+        <button type="submit">Create Mandate</button>
     </form>
-    <button onclick="goBackToHome()">Back to Home</button>
-    <button onclick="goToWallet()">Go to Wallet</button>
     <div id="message" class="message"></div>
 
     <script>
         const apiKey = 'MK_TEST_U7KS6AM684'; // Replace with your API Key
         const secretKey = 'FCAHPT9PR3SZFVC51NE63M33517PDXES'; // Replace with your Secret Key
         const baseUrl = 'https://sandbox.monnify.com'; // Replace with live URL if needed
-        const walletAccountNumber = '8193648995'; // Replace with your Wallet Account Number
+        const contractCode = 'YOUR_CONTRACT_CODE'; // Replace with your contract code
 
         // Function to generate Basic Auth token
         function generateAuthToken() {
@@ -67,65 +66,48 @@
             return `Basic ${token}`;
         }
 
-        // Function to handle form submission
-        async function initializeTransaction(event) {
-            event.preventDefault(); // Prevent form from submitting the traditional way
+        // Function to create a mandate
+        async function createMandate(event) {
+            event.preventDefault();
 
-            // Get form data
-            const amount = document.getElementById('amount').value;
-            const customerName = document.getElementById('customerName').value;
+            const accountName = document.getElementById('accountName').value;
             const customerEmail = document.getElementById('customerEmail').value;
-            const paymentDescription = document.getElementById('paymentDescription').value;
+            const bvn = document.getElementById('bvn').value;
+            const bankCode = document.getElementById('bankCode').value;
+            const accountNumber = document.getElementById('accountNumber').value;
 
             const authToken = generateAuthToken();
-            const endpoint = `${baseUrl}/api/v1/merchant/transactions/init-transaction`;
+            const endpoint = `${baseUrl}/api/v1/merchant/subaccounts`;
 
-            const transactionData = {
-                amount: amount, // Amount in kobo
-                customerName: customerName,
-                customerEmail: customerEmail,
-                paymentReference: "ref_" + Math.random().toString(36).substring(7), // Generate a unique reference
-                paymentDescription: paymentDescription,
+            const mandateData = {
+                accountReference: "ref_" + Math.random().toString(36).substring(7),
+                accountName: accountName,
                 currencyCode: "NGN",
-                redirectUrl: "https://yourwebsite.com/payment-callback", // Replace with your callback URL
-                walletAccountNumber: walletAccountNumber
+                contractCode: contractCode,
+                customerEmail: customerEmail,
+                customerName: accountName,
+                bvn: bvn,
+                bankCode: bankCode,
+                accountNumber: accountNumber,
             };
 
-            console.log('Request Data:', transactionData); // Log request data
-
             try {
-                const response = await axios.post(endpoint, transactionData, {
+                const response = await axios.post(endpoint, mandateData, {
                     headers: {
                         'Authorization': authToken,
                         'Content-Type': 'application/json'
                     }
                 });
 
-                console.log('API Response:', response.data); // Log API response
-
-                if (response.data.requestSuccessful) {
-                    const checkoutUrl = response.data.responseBody.checkoutUrl;
-                    window.location.href = checkoutUrl; // Redirect to Monnify checkout page
-                } else {
-                    showMessage(`Failed to initialize transaction: ${response.data.responseMessage}`, 'error');
-                }
+                showMessage('Mandate created successfully!', 'success');
+                console.log('Mandate Created:', response.data);
             } catch (error) {
-                console.error('API Error:', error.response ? error.response.data : error.message); // Log detailed error
-                showMessage(`Error initializing transaction: ${error.message}`, 'error');
+                showMessage(`Error creating mandate: ${error.response ? error.response.data.responseMessage : error.message}`, 'error');
+                console.error('Error creating mandate:', error.response ? error.response.data : error.message);
             }
         }
 
-        // Function to go back to index.html
-        function goBackToHome() {
-            window.location.href = 'index.html';
-        }
-
-        // Function to redirect to Monnify Wallet Dashboard
-        function goToWallet() {
-            window.location.href = 'https://app.monnify.com/wallet';
-        }
-
-        // Function to display messages to the user
+        // Function to display messages
         function showMessage(message, type = 'info') {
             const messageDiv = document.getElementById('message');
             messageDiv.textContent = message;
@@ -133,7 +115,7 @@
         }
 
         // Attach form submission handler
-        document.getElementById('paymentForm').addEventListener('submit', initializeTransaction);
+        document.getElementById('mandateForm').addEventListener('submit', createMandate);
     </script>
 </body>
 </html>
