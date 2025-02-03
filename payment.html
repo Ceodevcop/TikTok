@@ -3,56 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monnify Mandate Integration</title>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="mandate.js" defer></script> <!-- Link to the external JavaScript file -->
+    <title>Monnify Payment Gateway</title>
+    <script src="https://sdk.monnify.com/plugin/monnify.js"></script>
+    <script src="monnify.js" defer></script>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 20px;
             max-width: 600px;
-            margin: 0 auto;
+            margin: 20px auto;
+            padding: 20px;
             text-align: center;
         }
-        form {
+        .payment-form {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 15px;
+            margin: 30px 0;
         }
         input, button {
-            padding: 10px;
-            font-size: 16px;
+            padding: 12px;
             border-radius: 5px;
-            border: 1px solid #ccc;
+            border: 1px solid #ddd;
+            font-size: 16px;
         }
         button {
             background-color: #007BFF;
             color: white;
-            cursor: pointer;
             border: none;
+            cursor: pointer;
         }
         button:hover {
             background-color: #0056b3;
         }
         .message {
             margin-top: 20px;
-            font-size: 14px;
-            color: #333;
+            padding: 10px;
+            border-radius: 5px;
         }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
     </style>
 </head>
 <body>
-    <h1>Monnify Mandate Integration</h1>
-    <form id="mandateForm">
-        <input type="text" id="accountName" placeholder="Account Name" required>
-        <input type="email" id="customerEmail" placeholder="Customer Email" required>
-        <input type="text" id="bvn" placeholder="BVN" required>
-        <input type="text" id="bankCode" placeholder="Bank Code" required>
-        <input type="text" id="accountNumber" placeholder="Account Number" required>
-        <button type="submit">Create Mandate</button>
+    <h1>Monnify Payment Integration</h1>
+    
+    <form class="payment-form" onsubmit="event.preventDefault(); payWithMonnify()">
+        <input type="number" id="amount" placeholder="Amount (NGN)" required>
+        <input type="text" id="fullName" placeholder="Full Name" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="text" id="description" placeholder="Payment Description" required>
+        <button type="submit">Pay Now</button>
     </form>
+
     <div id="message" class="message"></div>
 </body>
 </html>
