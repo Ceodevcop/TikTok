@@ -1,0 +1,9 @@
+{
+  "API_KEY": "MK_PROD_FLX4P92EDF",
+  "CONTRACT_CODE": "626609763141",
+  "CURRENCY": "NGN",
+  "PAYMENT_METHODS": ["CARD", "ACCOUNT_TRANSFER", "USSD", "PHONE_NUMBER"],
+  "METADATA": {
+    "source": "Web Payment"
+  }
+}
