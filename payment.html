@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monnify Payment Integration</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <h1>Monnify Payment Integration</h1>
+    <button onclick="initializeTransaction()">Pay Now</button>
+
+    <script>
+        const apiKey = 'MK_TEST_U7KS6AM684';
+        const secretKey = 'FCAHPT9PR3SZFVC51NE63M33517PDXES';
+        const baseUrl = 'https://sandbox.monnify.com';
+        const walletAccountNumber = '8193648995';
+
+        // Function to generate Basic Auth token
+        function generateAuthToken() {
+            const token = btoa(`${apiKey}:${secretKey}`);
+            return `Basic ${token}`;
+        }
+
+        // Function to initialize a transaction
+        async function initializeTransaction() {
+            const authToken = generateAuthToken();
+            const endpoint = `${baseUrl}/api/v1/merchant/transactions/init-transaction`;
+
+            const transactionData = {
+                amount: 1000, // Amount in kobo (e.g., 1000 kobo = 10 Naira)
+                customerName: "John Doe",
+                customerEmail: "johndoe@example.com",
+                paymentReference: "ref_" + Math.random().toString(36).substring(7),
+                paymentDescription: "Test Payment",
+                currencyCode: "NGN",
+                redirectUrl: "https://yourwebsite.com/payment-callback",
+                walletAccountNumber: walletAccountNumber
+            };
+
+            try {
+                const response = await axios.post(endpoint, transactionData, {
+                    headers: {
+                        'Authorization': authToken,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.data.requestSuccessful) {
+                    const checkoutUrl = response.data.responseBody.checkoutUrl;
+                    window.location.href = checkoutUrl; // Redirect to Monnify checkout page
+                } else {
+                    console.error('Failed to initialize transaction:', response.data.responseMessage);
+                }
+            } catch (error) {
+                console.error('Error initializing transaction:', error);
+            }
+        }
+    </script>
+</body>
+</html>
