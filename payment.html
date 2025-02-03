@@ -14,15 +14,23 @@
             margin: 0 auto;
             text-align: center;
         }
-        button {
-            padding: 10px 20px;
-            margin: 10px;
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        input, button {
+            padding: 10px;
             font-size: 16px;
-            cursor: pointer;
-            border: none;
             border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
             background-color: #007BFF;
             color: white;
+            cursor: pointer;
+            border: none;
         }
         button:hover {
             background-color: #0056b3;
@@ -36,16 +44,21 @@
 </head>
 <body>
     <h1>Monnify Payment Integration</h1>
-    <button onclick="initializeTransaction()">Pay Now</button>
+    <form id="paymentForm">
+        <input type="number" id="amount" placeholder="Amount (in kobo)" required>
+        <input type="text" id="customerName" placeholder="Customer Name" required>
+        <input type="email" id="customerEmail" placeholder="Customer Email" required>
+        <input type="text" id="paymentDescription" placeholder="Payment Description" required>
+        <button type="submit">Pay Now</button>
+    </form>
     <button onclick="goBackToHome()">Back to Home</button>
     <button onclick="goToWallet()">Go to Wallet</button>
     <div id="message" class="message"></div>
 
     <script>
-        // Monnify API credentials
         const apiKey = 'MK_TEST_U7KS6AM684'; // Replace with your API Key
         const secretKey = 'FCAHPT9PR3SZFVC51NE63M33517PDXES'; // Replace with your Secret Key
-        const baseUrl = 'https://paylink.monnify.com/ipoENH'; // Replace with live URL if needed
+        const baseUrl = 'https://sandbox.monnify.com'; // Replace with live URL if needed
         const walletAccountNumber = '8193648995'; // Replace with your Wallet Account Number
 
         // Function to generate Basic Auth token
@@ -54,21 +67,31 @@
             return `Basic ${token}`;
         }
 
-        // Function to initialize a transaction
-        async function initializeTransaction() {
+        // Function to handle form submission
+        async function initializeTransaction(event) {
+            event.preventDefault(); // Prevent form from submitting the traditional way
+
+            // Get form data
+            const amount = document.getElementById('amount').value;
+            const customerName = document.getElementById('customerName').value;
+            const customerEmail = document.getElementById('customerEmail').value;
+            const paymentDescription = document.getElementById('paymentDescription').value;
+
             const authToken = generateAuthToken();
             const endpoint = `${baseUrl}/api/v1/merchant/transactions/init-transaction`;
 
             const transactionData = {
-                amount: 1000, // Amount in kobo (e.g., 1000 kobo = 10 Naira)
-                customerName: "John Doe", // Replace with the customer's name
-                customerEmail: "johndoe@example.com", // Replace with the customer's email
-                paymentReference: "ref_" + Math.random().toString(36).substring(7),
-                paymentDescription: "Test Payment", // Replace with a description
+                amount: amount, // Amount in kobo
+                customerName: customerName,
+                customerEmail: customerEmail,
+                paymentReference: "ref_" + Math.random().toString(36).substring(7), // Generate a unique reference
+                paymentDescription: paymentDescription,
                 currencyCode: "NGN",
-                redirectUrl: "https://paylink.monnify.com/ipoENH", // Replace with your callback URL
+                redirectUrl: "https://yourwebsite.com/payment-callback", // Replace with your callback URL
                 walletAccountNumber: walletAccountNumber
             };
+
+            console.log('Request Data:', transactionData); // Log request data
 
             try {
                 const response = await axios.post(endpoint, transactionData, {
@@ -78,6 +101,8 @@
                     }
                 });
 
+                console.log('API Response:', response.data); // Log API response
+
                 if (response.data.requestSuccessful) {
                     const checkoutUrl = response.data.responseBody.checkoutUrl;
                     window.location.href = checkoutUrl; // Redirect to Monnify checkout page
@@ -85,18 +110,19 @@
                     showMessage(`Failed to initialize transaction: ${response.data.responseMessage}`, 'error');
                 }
             } catch (error) {
+                console.error('API Error:', error.response ? error.response.data : error.message); // Log detailed error
                 showMessage(`Error initializing transaction: ${error.message}`, 'error');
             }
         }
 
         // Function to go back to index.html
         function goBackToHome() {
-            window.location.href = 'index.html'; // Replace with the correct path if needed
+            window.location.href = 'index.html';
         }
 
         // Function to redirect to Monnify Wallet Dashboard
         function goToWallet() {
-            window.location.href = 'https://app.monnify.com/wallet'; // Redirect to Monnify Wallet
+            window.location.href = 'https://app.monnify.com/wallet';
         }
 
         // Function to display messages to the user
@@ -105,6 +131,9 @@
             messageDiv.textContent = message;
             messageDiv.style.color = type === 'error' ? 'red' : 'green';
         }
+
+        // Attach form submission handler
+        document.getElementById('paymentForm').addEventListener('submit', initializeTransaction);
     </script>
 </body>
 </html>
