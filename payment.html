@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monnify Payment Integration</title>
@@ -10,6 +9,8 @@
 <body>
     <h1>Monnify Payment Integration</h1>
     <button onclick="initializeTransaction()">Pay Now</button>
+    <br><br>
+    <button onclick="goBackToHome()">Back to Home</button>
 
     <script>
         const apiKey = 'MK_TEST_U7KS6AM684';
@@ -57,7 +58,11 @@
                 console.error('Error initializing transaction:', error);
             }
         }
+
+        // Function to go back to index.html
+        function goBackToHome() {
+            window.location.href = 'index.html'; // Redirect to the home page
+        }
     </script>
-    <input type='button' onclick='index.html' value='Home' >
 </body>
 </html>
