@@ -38,14 +38,15 @@
     <h1>Monnify Payment Integration</h1>
     <button onclick="initializeTransaction()">Pay Now</button>
     <button onclick="goBackToHome()">Back to Home</button>
+    <button onclick="goToWallet()">Go to Wallet</button>
     <div id="message" class="message"></div>
 
     <script>
         // Monnify API credentials
-        const apiKey = 'MK_TEST_U7KS6AM684';
-        const secretKey = 'FCAHPT9PR3SZFVC51NE63M33517PDXES';
-        const baseUrl = 'https://sandbox.monnify.com';
-        const walletAccountNumber = '8193648995';
+        const apiKey = 'MK_TEST_U7KS6AM684'; // Replace with your API Key
+        const secretKey = 'FCAHPT9PR3SZFVC51NE63M33517PDXES'; // Replace with your Secret Key
+        const baseUrl = 'https://sandbox.monnify.com'; // Replace with live URL if needed
+        const walletAccountNumber = '8193648995'; // Replace with your Wallet Account Number
 
         // Function to generate Basic Auth token
         function generateAuthToken() {
@@ -60,12 +61,12 @@
 
             const transactionData = {
                 amount: 1000, // Amount in kobo (e.g., 1000 kobo = 10 Naira)
-                customerName: "John Doe",
-                customerEmail: "johndoe@example.com",
+                customerName: "John Doe", // Replace with the customer's name
+                customerEmail: "johndoe@example.com", // Replace with the customer's email
                 paymentReference: "ref_" + Math.random().toString(36).substring(7),
-                paymentDescription: "Test Payment",
+                paymentDescription: "Test Payment", // Replace with a description
                 currencyCode: "NGN",
-                redirectUrl: "https://yourwebsite.com/payment-callback",
+                redirectUrl: "https://yourwebsite.com/payment-callback", // Replace with your callback URL
                 walletAccountNumber: walletAccountNumber
             };
 
@@ -90,7 +91,12 @@
 
         // Function to go back to index.html
         function goBackToHome() {
-            window.location.href = 'index.html'; // Redirect to the home page
+            window.location.href = 'index.html'; // Replace with the correct path if needed
+        }
+
+        // Function to redirect to Monnify Wallet Dashboard
+        function goToWallet() {
+            window.location.href = 'https://app.monnify.com/wallet'; // Redirect to Monnify Wallet
         }
 
         // Function to display messages to the user
