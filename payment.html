@@ -1,19 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-   <link rel="stylesheet" href="style.css"> 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monnify Payment Integration</title>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .message {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #333;
+        }
+    </style>
 </head>
 <body>
     <h1>Monnify Payment Integration</h1>
-    <button onclick="initializeTransaction()">Process a payment</button>
-    <br><br>
+    <button onclick="initializeTransaction()">Pay Now</button>
     <button onclick="goBackToHome()">Back to Home</button>
+    <div id="message" class="message"></div>
 
     <script>
+        // Monnify API credentials
         const apiKey = 'MK_TEST_U7KS6AM684';
         const secretKey = 'FCAHPT9PR3SZFVC51NE63M33517PDXES';
         const baseUrl = 'https://sandbox.monnify.com';
@@ -53,16 +81,23 @@
                     const checkoutUrl = response.data.responseBody.checkoutUrl;
                     window.location.href = checkoutUrl; // Redirect to Monnify checkout page
                 } else {
-                    console.error('Failed to initialize transaction:', response.data.responseMessage);
+                    showMessage(`Failed to initialize transaction: ${response.data.responseMessage}`, 'error');
                 }
             } catch (error) {
-                console.error('Error initializing transaction:', error);
+                showMessage(`Error initializing transaction: ${error.message}`, 'error');
             }
         }
 
         // Function to go back to index.html
         function goBackToHome() {
             window.location.href = 'index.html'; // Redirect to the home page
+        }
+
+        // Function to display messages to the user
+        function showMessage(message, type = 'info') {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = message;
+            messageDiv.style.color = type === 'error' ? 'red' : 'green';
         }
     </script>
 </body>
