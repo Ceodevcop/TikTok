@@ -31,3 +31,30 @@ Input {
 color: #4db8ff;
     text-decoration: none;
    } 
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+}
+
+footer nav {
+  display: flex;
+  justify-content: space-around;
+}
+
+footer nav a {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Space between icon and text */
+}
+
+footer nav a:hover {
+  color: #ffcc00; /* Change color on hover */
+}
