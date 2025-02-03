@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- Navigation Bar -->
+<div class="navbar">
+    <a href="index.html"><button>Home</button></a>
+    <a href="forum.html"><button>Forum</button></a>
+    <a href="account.html"><button>Account</button></a>
+    <a href="contact.html"><button>Contact</button></a>
+    <button onclick="logout()">Logout</button>
+</div>
+
+<div class="container">
+    <h2>Profile</h2>
+    <div class="profile">
+        <img id="profile-pic" src="" alt="Profile Picture">
+        <p><strong>User ID:</strong> <span id="profile-uid"></span></p>
+        <p><strong>Username:</strong> <span id="profile-username"></span></p>
+        <p><strong>Email:</strong> <span id="profile-email"></span></p>
+        <button onclick="editProfile()">Edit Profile</button>
+    </div>
+</div>
+
+<!-- Profile Button at Bottom -->
+<div class="bottom-profile-button">
+    <a href="profile.html"><button>Profile</button></a>
+</div>
+
+<script>
+    function logout() {
+        alert('You have been logged out.');
+        window.location.href = 'index.html';
+    }
+
+    function editProfile() {
+        alert('Edit Profile functionality goes here.');
+    }
+</script>
+
+</body>
+</html>
