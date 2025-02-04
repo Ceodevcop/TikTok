@@ -1,0 +1,125 @@
+/* Background Image */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url('https://raw.githubusercontent.com/Ceodevcop/TikTok/refs/heads/main/IMG-20250204-WA0002.jpg'); /* Replace with your image URL */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+/* Navigation Bar */
+.navbar {
+    display: flex;
+    justify-content: space-around;
+    background-color: rgba(51, 51, 51, 0.8); /* Semi-transparent background */
+    padding: 10px;
+}
+.navbar button {
+    background-color: transparent;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+.navbar button:hover {
+    background-color: rgba(85, 85, 85, 0.8); /* Semi-transparent hover effect */
+}
+
+/* Container for Forms and Content */
+.container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #218838;
+}
+
+.hidden {
+    display: none;
+}
+
+.profile {
+    text-align: center;
+}
+
+.profile img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.profile p {
+    margin: 5px 0;
+}
+
+.profile button {
+    margin-top: 10px;
+    background-color: #007bff;
+}
+.profile button:hover {
+    background-color: #0056b3;
+}
+
+.forgot-password-link {
+    text-align: center;
+    margin-top: 10px;
+}
+.forgot-password-link a {
+    color: #007bff;
+    text-decoration: none;
+}
+.forgot-password-link a:hover {
+    text-decoration: underline;
+}
+
+.bottom-profile-button {
+    text-align: center;
+    margin-top: 20px;
+}
+.bottom-profile-button button {
+    width: auto;
+    padding: 10px 20px;
+}
