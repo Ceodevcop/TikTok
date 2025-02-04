@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>
+    function logout() {
+        alert('You have been logged out.');
+        window.location.href = 'index.html';
+    }
+</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign-Up, Login, and Profile</title>
@@ -135,11 +141,15 @@
 </div>
 
 <div class="container">
-    <!-- Home Section -->
-    <div id="home-section">
-        <h2>Home</h2>
-        <p>Welcome to the Home page!</p>
-    </div>
+    
+<!-- Navigation Bar -->
+<div class="navbar">
+    <a href="index.html"><button>Home</button></a>
+    <a href="forum.html"><button>Forum</button></a>
+    <a href="account.html"><button>Account</button></a>
+    <a href="contact.html"><button>Contact</button></a>
+    <button onclick="logout()">Logout</button>
+</div>
 
     <!-- Forum Section -->
     <div id="forum-section" class="hidden">
