@@ -12,12 +12,15 @@
     .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
     .points-counter { position: fixed; top: 20px; left: 20px; background: gold; padding: 10px; border-radius: 5px; }
     .withdraw-section { display: none; margin-top: 20px; }
+    .auth-buttons a { text-decoration: none; color: white; }
+    .auth-buttons button { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+    .auth-buttons button:hover { background: #0056b3; }
   </style>
 </head>
 <body>
   <!-- Auth Buttons -->
   <div class="auth-buttons" id="authButtons">
-    <button onclick="showModal('signup')">Sign Up</button>
+    <a href="account.html"><button>Sign Up</button></a>
     <button onclick="showModal('login')">Login</button>
   </div>
 
@@ -25,17 +28,6 @@
   <div class="points-counter" id="pointsCounter" style="display: none;">
     Points: <span id="points">0</span>
     <button onclick="withdraw()" id="withdrawButton" disabled>Withdraw</button>
-  </div>
-
-  <!-- Signup Modal -->
-  <div class="modal" id="signupModal">
-    <h2>Sign Up</h2>
-    <form onsubmit="handleSignup(event)">
-      <input type="text" placeholder="Username" required>
-      <input type="password" placeholder="Password" required>
-      <button type="submit">Create Account</button>
-    </form>
-    <button onclick="closeModals()">Close</button>
   </div>
 
   <!-- Login Modal -->
@@ -77,24 +69,6 @@
     let pointsInterval = null;
 
     // User handling
-    function handleSignup(e) {
-      e.preventDefault();
-      const username = e.target[0].value;
-      const password = e.target[1].value;
-      
-      if(localStorage.getItem(username)) {
-        alert('Username already exists!');
-        return;
-      }
-      
-      localStorage.setItem(username, JSON.stringify({
-        password,
-        points: 0
-      }));
-      alert('Account created! Please login.');
-      closeModals();
-    }
-
     function handleLogin(e) {
       e.preventDefault();
       const username = e.target[0].value;
@@ -163,8 +137,6 @@
 
     // Initial check for logged in user
     function checkExistingSession() {
-      // Implement proper session handling in real application
-      // This is just a basic example
       const user = localStorage.getItem('currentUser');
       if(user) {
         currentUser = user;
