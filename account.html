@@ -33,7 +33,8 @@
         input[type="text"],
         input[type="password"],
         input[type="email"],
-        input[type="file"] {
+        input[type="file"],
+        input[type="number"] {
             width: 100%;
             padding: 8px;
             box-sizing: border-box;
@@ -73,6 +74,20 @@
         }
         .profile button:hover {
             background-color: #0056b3;
+        }
+        .transaction-history {
+            margin-top: 20px;
+        }
+        .transaction-history h3 {
+            text-align: center;
+        }
+        .transaction-history ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .transaction-history li {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
         }
     </style>
 </head>
@@ -125,7 +140,12 @@
             <p><strong>User ID:</strong> <span id="profile-uid"></span></p>
             <p><strong>Username:</strong> <span id="profile-username"></span></p>
             <p><strong>Email:</strong> <span id="profile-email"></span></p>
+            <p><strong>Balance:</strong> <span id="profile-balance"></span> coins</p>
+            <button onclick="toggleForms('send-coins')">Send Coins</button>
+            <button onclick="toggleForms('transaction-history')">Transaction History</button>
+            <button onclick="downloadStatement()">Download Statement</button>
             <button onclick="editProfile()">Edit Profile</button>
+            <button onclick="logout()">Logout</button>
         </div>
     </div>
 
@@ -146,6 +166,30 @@
         </div>
         <button onclick="saveProfile()">Save Changes</button>
         <button onclick="toggleForms('profile')">Cancel</button>
+    </div>
+
+    <!-- Send Coins Form -->
+    <div id="send-coins-form" class="hidden">
+        <h2>Send Coins</h2>
+        <div class="form-group">
+            <label for="recipient-uid">Recipient UID:</label>
+            <input type="text" id="recipient-uid" required>
+        </div>
+        <div class="form-group">
+            <label for="send-amount">Amount:</label>
+            <input type="number" id="send-amount" required>
+        </div>
+        <button onclick="sendCoins()">Send</button>
+        <button onclick="toggleForms('profile')">Cancel</button>
+    </div>
+
+    <!-- Transaction History Section -->
+    <div id="transaction-history-section" class="hidden">
+        <h2>Transaction History</h2>
+        <div class="transaction-history">
+            <ul id="transaction-history-list"></ul>
+        </div>
+        <button onclick="toggleForms('profile')">Back to Profile</button>
     </div>
 </div>
 
@@ -178,7 +222,9 @@
                     username,
                     email,
                     password,
-                    profilePic: e.target.result
+                    profilePic: e.target.result,
+                    balance: 100, // Initial balance
+                    transactions: [] // Initialize empty transaction history
                 });
                 alert(`Sign up successful! Your UID is ${uid}. Please login.`);
                 toggleForms('login');
@@ -186,7 +232,7 @@
             if (profilePic) {
                 reader.readAsDataURL(profilePic);
             } else {
-                users.push({ uid, username, email, password, profilePic: '' });
+                users.push({ uid, username, email, password, profilePic: '', balance: 100, transactions: [] });
                 alert(`Sign up successful! Your UID is ${uid}. Please login.`);
                 toggleForms('login');
             }
@@ -214,6 +260,7 @@
         document.getElementById('profile-uid').textContent = currentUser.uid;
         document.getElementById('profile-username').textContent = currentUser.username;
         document.getElementById('profile-email').textContent = currentUser.email;
+        document.getElementById('profile-balance').textContent = currentUser.balance;
         document.getElementById('profile-pic').src = currentUser.profilePic || 'https://via.placeholder.com/100';
         toggleForms('profile');
     }
@@ -250,12 +297,103 @@
         }
     }
 
+    // Send Coins Function
+    function sendCoins() {
+        const recipientUID = document.getElementById('recipient-uid').value;
+        const amount = parseFloat(document.getElementById('send-amount').value);
+
+        if (isNaN(amount) || amount <= 0) {
+            alert('Please enter a valid amount.');
+            return;
+        }
+
+        if (currentUser.balance < amount) {
+            alert('Insufficient balance.');
+            return;
+        }
+
+        const recipient = users.find(u => u.uid === recipientUID);
+        if (!recipient) {
+            alert('Recipient not found.');
+            return;
+        }
+
+        currentUser.balance -= amount;
+        recipient.balance += amount;
+
+        const transaction = {
+            type: 'send',
+            amount,
+            recipientUID,
+            timestamp: new Date().toLocaleString()
+        };
+        currentUser.transactions.push(transaction);
+
+        const recipientTransaction = {
+            type: 'receive',
+            amount,
+            senderUID: currentUser.uid,
+            timestamp: new Date().toLocaleString()
+        };
+        recipient.transactions.push(recipientTransaction);
+
+        alert(`Successfully sent ${amount} coins to ${recipientUID}.`);
+        showProfile();
+    }
+
+    // Show Transaction History Function
+    function showTransactionHistory() {
+        const transactionList = document.getElementById('transaction-history-list');
+        transactionList.innerHTML = '';
+
+        currentUser.transactions.forEach(transaction => {
+            const li = document.createElement('li');
+            if (transaction.type === 'send') {
+                li.textContent = `Sent ${transaction.amount} coins to ${transaction.recipientUID} on ${transaction.timestamp}`;
+            } else if (transaction.type === 'receive') {
+                li.textContent = `Received ${transaction.amount} coins from ${transaction.senderUID} on ${transaction.timestamp}`;
+            }
+            transactionList.appendChild(li);
+        });
+
+        toggleForms('transaction-history');
+    }
+
+    // Download Statement Function
+    function downloadStatement() {
+        let statement = `User ID: ${currentUser.uid}\nUsername: ${currentUser.username}\nEmail: ${currentUser.email}\nBalance: ${currentUser.balance} coins\n\nTransaction History:\n`;
+
+        currentUser.transactions.forEach(transaction => {
+            if (transaction.type === 'send') {
+                statement += `Sent ${transaction.amount} coins to ${transaction.recipientUID} on ${transaction.timestamp}\n`;
+            } else if (transaction.type === 'receive') {
+                statement += `Received ${transaction.amount} coins from ${transaction.senderUID} on ${transaction.timestamp}\n`;
+            }
+        });
+
+        const blob = new Blob([statement], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `statement_${currentUser.uid}.txt`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    // Logout Function
+    function logout() {
+        currentUser = null;
+        toggleForms('login');
+    }
+
     // Toggle Forms Function
     function toggleForms(form) {
         document.getElementById('signup-form').classList.add('hidden');
         document.getElementById('login-form').classList.add('hidden');
         document.getElementById('profile-section').classList.add('hidden');
         document.getElementById('edit-profile-form').classList.add('hidden');
+        document.getElementById('send-coins-form').classList.add('hidden');
+        document.getElementById('transaction-history-section').classList.add('hidden');
 
         if (form === 'signup') {
             document.getElementById('signup-form').classList.remove('hidden');
@@ -265,6 +403,10 @@
             document.getElementById('profile-section').classList.remove('hidden');
         } else if (form === 'edit') {
             document.getElementById('edit-profile-form').classList.remove('hidden');
+        } else if (form === 'send-coins') {
+            document.getElementById('send-coins-form').classList.remove('hidden');
+        } else if (form === 'transaction-history') {
+            showTransactionHistory();
         }
     }
 </script>
