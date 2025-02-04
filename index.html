@@ -1,96 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta name="google-site-verification" content="XQhncAtZVmJBO9zywRSc9OqN4ZH-n7cGJ7r9Jr2Dy3o" />
-  <meta name="google-site-verification" content="XQhncAtZVmJBO9zywRSc9OqN4ZH-n7cGJ7r9Jr2Dy3o" />
-  <h1>TikTok Booster</h1>
-
-  <!-- Include Font Awesome for icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-  <div class="g-ytsubscribe" data-channel="@stevoh4u" data-layout="default" data-count="default"></div>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1321753983972308"
-     crossorigin="anonymous"></script>
-  <meta name="google-adsense-account" content="ca-pub-1321753983972308">
-  <!-- Open Graph Title -->
-  <meta property="og:title" content="Watch priahmz Viral TikTok Videos | @priahmz">
-
-  <!-- Open Graph Description -->
-  <meta property="og:description" content="Follow @priahmz on TikTok for hilarious skits, trending challenges, and more! Check out my latest videos and join the fun!">
-
-  <!-- Open Graph Image -->
-  <meta property="og:image" content="https://tik-tok-zeta.vercel.app/images/priahmz-tiktok-thumbnail.jpg">
-
-  <!-- Open Graph URL -->
-  <meta property="og:url" content="https://tik-tok-zeta.vercel.app/">
-
-  <!-- Open Graph Type -->
-  <meta property="og:type" content="video.other"><!-- Title Tag -->
-  <title>Watch priahmz Viral TikTok Videos | @priahmz</title>
-
-  <!-- Meta Description -->
-  <meta name="description" content="Follow @priahmz on TikTok for hilarious skits, trending challenges, and more! Check out my latest videos and join the fun!">
-
-  <!-- Canonical Tag -->
-  <link rel="canonical" href="https://tik-tok-zeta.vercel.app/" />
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "VideoObject",
-    "name": "Watch Priahmz Viral TikTok Videos",
-    "description": "Follow @priahmz on TikTok for hilarious skits, trending challenges, and more!",
-    "thumbnailUrl": "https://tik-tok-zeta.vercel.app/images/priahmz-tiktok-thumbnail.jpg",
-    "uploadDate": "2025-02-03",
-    "contentUrl": "https://www.tiktok.com/@priahmz/video/7464008877076401414",
-    "embedUrl": "https://www.tiktok.com/embed/7464008877076401414",
-    "interactionStatistic": {
-      "@type": "InteractionCounter",
-      "interactionType": "https://schema.org/WatchAction",
-      "userInteractionCount": "1000"
-    }
-  }
-  </script>
-  <!-- Embed TikTok Video -->
-  <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@priahmz/video/7464008877076401414" data-video-id="7464008877076401414" style="max-width: 605px;min-width: 325px;" >
-    <section> 
-      <a target="_blank" title="@priahmz" href="https://www.tiktok.com/@priahmz">@priahmz</a> 
-    </section>
-  </blockquote>
-  <script async src="https://www.tiktok.com/embed.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Video Feed</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>TikTok Booster - Earn Points</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <meta name="google-site-verification" content="google-site-verification=ueCAdqKVn6QHsXcMdkl4eNCBBaM477IFxGmnJHabbow" />
+  <style>
+    /* Add custom styles */
+    .auth-buttons { position: absolute; top: 20px; right: 20px; }
+    .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20px; background: white; z-index: 1000; }
+    .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
+    .points-counter { position: fixed; top: 20px; left: 20px; background: gold; padding: 10px; border-radius: 5px; }
+    .withdraw-section { display: none; margin-top: 20px; }
+  </style>
 </head>
 <body>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1321753983972308"
-     crossorigin="anonymous"></script>
-  <ins class="adsbygoogle"
-     style="display:inline-block;width:120px;height:50px"
-     data-ad-client="ca-pub-1321753983972308"
-     data-ad-slot="5795422629"></ins>
+  <!-- Auth Buttons -->
+  <div class="auth-buttons" id="authButtons">
+    <button onclick="showModal('signup')">Sign Up</button>
+    <button onclick="showModal('login')">Login</button>
+  </div>
+
+  <!-- Points Counter -->
+  <div class="points-counter" id="pointsCounter" style="display: none;">
+    Points: <span id="points">0</span>
+    <button onclick="withdraw()" id="withdrawButton" disabled>Withdraw</button>
+  </div>
+
+  <!-- Signup Modal -->
+  <div class="modal" id="signupModal">
+    <h2>Sign Up</h2>
+    <form onsubmit="handleSignup(event)">
+      <input type="text" placeholder="Username" required>
+      <input type="password" placeholder="Password" required>
+      <button type="submit">Create Account</button>
+    </form>
+    <button onclick="closeModals()">Close</button>
+  </div>
+
+  <!-- Login Modal -->
+  <div class="modal" id="loginModal">
+    <h2>Login</h2>
+    <form onsubmit="handleLogin(event)">
+      <input type="text" placeholder="Username" required>
+      <input type="password" placeholder="Password" required>
+      <button type="submit">Login</button>
+    </form>
+    <button onclick="closeModals()">Close</button>
+  </div>
+
+  <!-- Video Content -->
+  <main id="videoContent" style="display: none;">
+    <h1>Earn Points by Watching Videos</h1>
+    <div class="video-container">
+      <!-- Embedded TikTok Video -->
+      <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@priahmz/video/7464008877076401414" 
+        data-video-id="7464008877076401414" style="max-width: 605px;min-width: 325px;" >
+        <section> <a target="_blank" title="@priahmz" href="https://www.tiktok.com/@priahmz">@priahmz</a> </section>
+      </blockquote>
+      <script async src="https://www.tiktok.com/embed.js"></script>
+    </div>
+    
+    <!-- Withdraw Section -->
+    <div class="withdraw-section" id="withdrawSection">
+      <h3>Withdrawal Information</h3>
+      <input type="text" placeholder="Account Details" id="accountInfo">
+      <button onclick="handleWithdrawal()">Withdraw Now</button>
+    </div>
+  </main>
+
+  <!-- Overlay -->
+  <div class="overlay" id="overlay" onclick="closeModals()"></div>
+
   <script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
+    let currentUser = null;
+    let pointsInterval = null;
+
+    // User handling
+    function handleSignup(e) {
+      e.preventDefault();
+      const username = e.target[0].value;
+      const password = e.target[1].value;
+      
+      if(localStorage.getItem(username)) {
+        alert('Username already exists!');
+        return;
+      }
+      
+      localStorage.setItem(username, JSON.stringify({
+        password,
+        points: 0
+      }));
+      alert('Account created! Please login.');
+      closeModals();
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const username = e.target[0].value;
+      const password = e.target[1].value;
+      const user = JSON.parse(localStorage.getItem(username));
+
+      if(user && user.password === password) {
+        currentUser = username;
+        setupLoggedInState();
+        startPointsTimer();
+        closeModals();
+      } else {
+        alert('Invalid credentials!');
+      }
+    }
+
+    function setupLoggedInState() {
+      document.getElementById('authButtons').style.display = 'none';
+      document.getElementById('pointsCounter').style.display = 'block';
+      document.getElementById('videoContent').style.display = 'block';
+      updatePointsDisplay();
+    }
+
+    // Points system
+    function startPointsTimer() {
+      pointsInterval = setInterval(() => {
+        const user = JSON.parse(localStorage.getItem(currentUser));
+        user.points += 0.5;
+        localStorage.setItem(currentUser, JSON.stringify(user));
+        updatePointsDisplay();
+        
+        if(user.points >= 1000) {
+          document.getElementById('withdrawButton').disabled = false;
+          document.getElementById('withdrawSection').style.display = 'block';
+        }
+      }, 1000);
+    }
+
+    function updatePointsDisplay() {
+      const user = JSON.parse(localStorage.getItem(currentUser));
+      document.getElementById('points').textContent = user.points.toFixed(1);
+    }
+
+    function withdraw() {
+      const user = JSON.parse(localStorage.getItem(currentUser));
+      if(user.points >= 1000) {
+        user.points -= 1000;
+        localStorage.setItem(currentUser, JSON.stringify(user));
+        alert('Withdrawal successful! $10 has been sent to your account.');
+        updatePointsDisplay();
+        document.getElementById('withdrawButton').disabled = true;
+        document.getElementById('withdrawSection').style.display = 'none';
+      }
+    }
+
+    // Modal handling
+    function showModal(type) {
+      document.getElementById('overlay').style.display = 'block';
+      document.getElementById(`${type}Modal`).style.display = 'block';
+    }
+
+    function closeModals() {
+      document.getElementById('overlay').style.display = 'none';
+      document.querySelectorAll('.modal').forEach(modal => modal.style.display = 'none');
+    }
+
+    // Initial check for logged in user
+    function checkExistingSession() {
+      // Implement proper session handling in real application
+      // This is just a basic example
+      const user = localStorage.getItem('currentUser');
+      if(user) {
+        currentUser = user;
+        setupLoggedInState();
+        startPointsTimer();
+      }
+    }
+
+    window.onload = checkExistingSession;
   </script>
-  <header>
-
-  </header>
-
-  <main id="video-feed"></main>
-
-  <!-- Footer with buttons and icons -->
-  <footer>
-    <nav>
-      <a href="index.html">Home<i class="fas fa-home"></i></a>
-      <a href="profile.html">Profile<i class="fas fa-user"></i> </a>
-      <a href="forum.html">Forum<i class="fas fa-comments"></i></a>
-      <a href="account.html">Login<i class="fas fa-cog"></i></a>
-      <a href="contact.html">Contact<i class="fas fa-envelope"></i></a>
-    </nav>
-  </footer>
-
-  <script src="script.js"></script>
 </body>
 </html>
