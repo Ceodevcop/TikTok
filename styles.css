@@ -123,3 +123,7 @@ button:hover {
     width: auto;
     padding: 10px 20px;
 }
+a {
+    color: #4db8ff;
+    text-decoration: none;
+    }
