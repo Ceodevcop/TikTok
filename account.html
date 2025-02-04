@@ -1,70 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script>
-    function logout() {
-        alert('You have been logged out.');
-        window.location.href = 'index.html';
-    }
-</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign-Up, Login, and Profile</title>
     <style>
-        /* Background Image */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-image: url('https://via.placeholder.com/1920x1080'); /* Replace with your image URL */
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
+            background-color: #f4f4f4;
         }
-
-        /* Navigation Bar */
-        .navbar {
-            display: flex;
-            justify-content: space-around;
-            background-color: rgba(51, 51, 51, 0.8); /* Semi-transparent background */
-            padding: 10px;
-        }
-        .navbar button {
-            background-color: transparent;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-        }
-        .navbar button:hover {
-            background-color: rgba(85, 85, 85, 0.8); /* Semi-transparent hover effect */
-        }
-
-        /* Container for Forms and Content */
         .container {
             max-width: 400px;
             margin: 50px auto;
             padding: 20px;
-            background: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+            background: white;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-
         h2 {
             text-align: center;
             margin-bottom: 20px;
         }
-
         .form-group {
             margin-bottom: 15px;
         }
-
         label {
             display: block;
             margin-bottom: 5px;
         }
-
         input[type="text"],
         input[type="password"],
         input[type="email"],
@@ -75,7 +40,6 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
-
         button {
             width: 100%;
             padding: 10px;
@@ -88,26 +52,21 @@
         button:hover {
             background-color: #218838;
         }
-
         .hidden {
             display: none;
         }
-
         .profile {
             text-align: center;
         }
-
         .profile img {
             width: 100px;
             height: 100px;
             border-radius: 50%;
             margin-bottom: 10px;
         }
-
         .profile p {
             margin: 5px 0;
         }
-
         .profile button {
             margin-top: 10px;
             background-color: #007bff;
@@ -115,106 +74,78 @@
         .profile button:hover {
             background-color: #0056b3;
         }
-
-        .forgot-password-link {
-            text-align: center;
-            margin-top: 10px;
-        }
-        .forgot-password-link a {
-            color: #007bff;
-            text-decoration: none;
-        }
-        .forgot-password-link a:hover {
-            text-decoration: underline;
-        }
     </style>
 </head>
 <body>
 
-    
-<!-- Navigation Bar -->
-<div class="navbar">
-    <a href="index.html"><button>Home</button></a>
-    <a href="forum.html"><button>Forum</button></a>
-    <a href="account.html"><button>Account</button></a>
-    <a href="contact.html"><button>Contact</button></a>
-    <button onclick="logout()">Logout</button>
-</div>
 <div class="container">
-
-
-    <!-- Forum Section -->
-    <div id="forum-section" class="hidden">
-        <h2>Forum</h2>
-        <p>Welcome to the Forum page!</p>
+    <!-- Sign-Up Form -->
+    <div id="signup-form">
+        <h2>Sign Up</h2>
+        <div class="form-group">
+            <label for="signup-username">Username:</label>
+            <input type="text" id="signup-username" required>
+        </div>
+        <div class="form-group">
+            <label for="signup-email">Email:</label>
+            <input type="email" id="signup-email" required>
+        </div>
+        <div class="form-group">
+            <label for="signup-password">Password:</label>
+            <input type="password" id="signup-password" required>
+        </div>
+        <div class="form-group">
+            <label for="signup-profile-pic">Profile Picture:</label>
+            <input type="file" id="signup-profile-pic" accept="image/*">
+        </div>
+        <button onclick="signUp()">Sign Up</button>
+        <p>Already have an account? <a href="#" onclick="toggleForms('login')">Login</a></p>
     </div>
 
-    <!-- Account Section -->
-    <div id="account-section" class="hidden">
-        <h2>Account</h2>
-        <div id="profile-section" class="hidden">
-            <div class="profile">
-                <img id="profile-pic" src="" alt="Profile Picture">
-                <p><strong>User ID:</strong> <span id="profile-uid"></span></p>
-                <p><strong>Username:</strong> <span id="profile-username"></span></p>
-                <p><strong>Email:</strong> <span id="profile-email"></span></p>
-                <button onclick="editProfile()">Edit Profile</button>
-            </div>
+    <!-- Login Form -->
+    <div id="login-form" class="hidden">
+        <h2>Login</h2>
+        <div class="form-group">
+            <label for="login-username">Username:</label>
+            <input type="text" id="login-username" required>
         </div>
-        <div id="login-form">
-            <h2>Login</h2>
-            <div class="form-group">
-                <label for="login-username">Username:</label>
-                <input type="text" id="login-username" required>
-            </div>
-            <div class="form-group">
-                <label for="login-password">Password:</label>
-                <input type="password" id="login-password" required>
-            </div>
-            <button onclick="login()">Login</button>
-            <div class="forgot-password-link">
-                <a href="#" onclick="showForgotPassword()">Forgot Password?</a>
-            </div>
-            <p>Don't have an account? <a href="#" onclick="toggleForms('signup')">Sign Up</a></p>
+        <div class="form-group">
+            <label for="login-password">Password:</label>
+            <input type="password" id="login-password" required>
         </div>
-        <div id="signup-form" class="hidden">
-            <h2>Sign Up</h2>
-            <div class="form-group">
-                <label for="signup-username">Username:</label>
-                <input type="text" id="signup-username" required>
-            </div>
-            <div class="form-group">
-                <label for="signup-email">Email:</label>
-                <input type="email" id="signup-email" required>
-            </div>
-            <div class="form-group">
-                <label for="signup-password">Password:</label>
-                <input type="password" id="signup-password" required>
-            </div>
-            <div class="form-group">
-                <label for="signup-profile-pic">Profile Picture:</label>
-                <input type="file" id="signup-profile-pic" accept="image/*">
-            </div>
-            <button onclick="signUp()">Sign Up</button>
-            <p>Already have an account? <a href="#" onclick="toggleForms('login')">Login</a></p>
-        </div>
-        <div id="forgot-password-form" class="hidden">
-            <h2>Forgot Password</h2>
-            <div class="form-group">
-                <label for="forgot-email">Email:</label>
-                <input type="email" id="forgot-email" required>
-            </div>
-            <button onclick="resetPassword()">Reset Password</button>
-            <div class="forgot-password-link">
-                <a href="#" onclick="toggleForms('login')">Back to Login</a>
-            </div>
+        <button onclick="login()">Login</button>
+        <p>Don't have an account? <a href="#" onclick="toggleForms('signup')">Sign Up</a></p>
+    </div>
+
+    <!-- Profile Section -->
+    <div id="profile-section" class="hidden">
+        <h2>Profile</h2>
+        <div class="profile">
+            <img id="profile-pic" src="" alt="Profile Picture">
+            <p><strong>User ID:</strong> <span id="profile-uid"></span></p>
+            <p><strong>Username:</strong> <span id="profile-username"></span></p>
+            <p><strong>Email:</strong> <span id="profile-email"></span></p>
+            <button onclick="editProfile()">Edit Profile</button>
         </div>
     </div>
 
-    <!-- Contact Section -->
-    <div id="contact-section" class="hidden">
-        <h2>Contact</h2>
-        <p>Welcome to the Contact page!</p>
+    <!-- Edit Profile Form -->
+    <div id="edit-profile-form" class="hidden">
+        <h2>Edit Profile</h2>
+        <div class="form-group">
+            <label for="edit-username">Username:</label>
+            <input type="text" id="edit-username" required>
+        </div>
+        <div class="form-group">
+            <label for="edit-email">Email:</label>
+            <input type="email" id="edit-email" required>
+        </div>
+        <div class="form-group">
+            <label for="edit-profile-pic">Profile Picture:</label>
+            <input type="file" id="edit-profile-pic" accept="image/*">
+        </div>
+        <button onclick="saveProfile()">Save Changes</button>
+        <button onclick="toggleForms('profile')">Cancel</button>
     </div>
 </div>
 
@@ -324,7 +255,7 @@
         document.getElementById('signup-form').classList.add('hidden');
         document.getElementById('login-form').classList.add('hidden');
         document.getElementById('profile-section').classList.add('hidden');
-        document.getElementById('forgot-password-form').classList.add('hidden');
+        document.getElementById('edit-profile-form').classList.add('hidden');
 
         if (form === 'signup') {
             document.getElementById('signup-form').classList.remove('hidden');
@@ -332,71 +263,10 @@
             document.getElementById('login-form').classList.remove('hidden');
         } else if (form === 'profile') {
             document.getElementById('profile-section').classList.remove('hidden');
-        } else if (form === 'forgot') {
-            document.getElementById('forgot-password-form').classList.remove('hidden');
+        } else if (form === 'edit') {
+            document.getElementById('edit-profile-form').classList.remove('hidden');
         }
     }
-
-    // Show Forgot Password Form
-    function showForgotPassword() {
-        toggleForms('forgot');
-    }
-
-    // Reset Password Function
-    function resetPassword() {
-        const email = document.getElementById('forgot-email').value;
-        const user = users.find(u => u.email === email);
-
-        if (user) {
-            alert(`A password reset link has been sent to ${email}.`);
-            toggleForms('login');
-        } else {
-            alert('No account found with that email address.');
-        }
-    }
-
-    // Navigation Functions
-    function showHome() {
-        hideAllSections();
-        document.getElementById('home-section').classList.remove('hidden');
-    }
-
-    function showForum() {
-        hideAllSections();
-        document.getElementById('forum-section').classList.remove('hidden');
-    }
-
-    function showAccount() {
-        hideAllSections();
-        document.getElementById('account-section').classList.remove('hidden');
-        if (currentUser) {
-            toggleForms('profile');
-        } else {
-            toggleForms('login');
-        }
-    }
-
-    function showContact() {
-        hideAllSections();
-        document.getElementById('contact-section').classList.remove('hidden');
-    }
-
-    function logout() {
-        currentUser = null;
-        alert('You have been logged out.');
-        showHome();
-    }
-
-    // Hide All Sections Function
-    function hideAllSections() {
-        document.getElementById('home-section').classList.add('hidden');
-        document.getElementById('forum-section').classList.add('hidden');
-        document.getElementById('account-section').classList.add('hidden');
-        document.getElementById('contact-section').classList.add('hidden');
-    }
-
-    // Initialize Home Page
-    showHome();
 </script>
 
 </body>
